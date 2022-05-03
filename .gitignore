@@ -129,3 +129,6 @@ dmypy.json
 .pyre/
 
 .idea/
+
+my_hazelcast_venv
+.DS_Store
