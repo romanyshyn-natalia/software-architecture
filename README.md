@@ -1,4 +1,4 @@
-# HW 4: Basic architecture of microservices
+# HW 4: Microservices with Hazelcast Messaging queue
 
 ## Requirements
 The following command installs all necessary packages:
