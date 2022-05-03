@@ -1,5 +1,7 @@
-import hazelcast
 import logging
+import time
+
+import hazelcast
 
 # Configure the logging
 logging.basicConfig(level=logging.INFO)
@@ -15,11 +17,12 @@ client = hazelcast.HazelcastClient(cluster_name="dev",
 print("Connected to cluster")
 
 # Get the Distributed Map from Cluster.
-my_map = client.get_map("my-distributed-map").blocking()
+my_queue = client.get_queue("my-distributed-queue").blocking()
 
-# Standard Put and Get
+# Standard Put
 for idx in range(1000):
-    my_map.put(f"key-{idx}", f"value-{idx}")
+    my_queue.put(f"value-{idx}")
+    time.sleep(0.01)
 
 # Shutdown this Hazelcast Client
 client.shutdown()
