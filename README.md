@@ -1,4 +1,4 @@
-# HW 1: Basic architecture of microservices
+# HW 4: Basic architecture of microservices
 
 ## Requirements
 The following command installs all necessary packages:
