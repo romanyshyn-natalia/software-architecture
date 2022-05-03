@@ -1,4 +1,4 @@
-# HW 1: Basic architecture of microservices
+# HW 3: Microservices with Hazelcast Distributed Map
 
 ## Requirements
 The following command installs all necessary packages:
