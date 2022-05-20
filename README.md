@@ -1,4 +1,4 @@
-# HW 1: Basic architecture of microservices
+# HW 5: Consul
 
 ## Requirements
 The following command installs all necessary packages:
@@ -7,36 +7,49 @@ pip install -r requirements.txt
 ```
 
 ### Usage
-Run one instance of facade service, one of messaging and three of logging:
-```bash
-FLASK_APP=facade-service/facade-service.py flask run -p 8080
-FLASK_APP=logging-service/logging-service.py flask run -p 8082
-FLASK_APP=logging-service/logging-service.py flask run -p 8083
-FLASK_APP=logging-service/logging-service.py flask run -p 8084
-FLASK_APP=messages-service/messages-service.py flask run -p 8085
-FLASK_APP=messages-service/messages-service.py flask run -p 8086
+Consul installation:
+```
+bash scripts/run_consul.sh
 ```
 
+To start hazelcast:
+```
+hazelcast-5.1.1/bin/hz start
+```
+
+Run one instance of facade service, one of messaging and three of logging:
+```bash
+python facade-service/facade-service.py --port 8080
+python logging-service/logging-service.py --port 8082
+python logging-service/logging-service.py --port 8083
+python logging-service/logging-service.py --port 8084
+python messages-service/messages-service.py --port 8085
+python messages-service/messages-service.py --port 8086
+```
+
+To shutdown Consul:
+```
+bash scripts/stop_consul.sh
+```
 ### Test
 Execute the GET/POST requests from [Requests.http](https://github.com/romanyshyn-natalia/software-architecture/blob/micro_basics/facade-service/Requests.http) file.
 
 ## Results
-We created three logging service instances, two message service instances, and send 10 messages to facade service.
+We created three logging service instances, two message service instances, and send 5 messages to facade service.
 
-Logging service 1 got such messages:
-![](images/logging1.png)
+GET result:
+![](images/get.png)
 
-Logging service 2 got such messages:
-![](images/logging2.png)
+Facade log:
+![](images/facade.png)
 
-Logging service 3 got such messages:
-![](images/logging3.png)
+Logging log:
+![](images/l1.png)
+![](images/l2.png)
+![](images/l3.png)
 
-Message service 1 got such messages:
-![](images/message1.png)
+Messages log:
+![](images/m.png)
 
-Message service 2 got such messages:
-![](images/message2.png)
-
-Reading messages from facade:
-![](images/results.png)
+Consul data example:
+![](images/consul.png)

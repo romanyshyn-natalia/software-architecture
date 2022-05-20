@@ -37,38 +37,3 @@ Content-Type: application/json
 "msg5"
 
 ###
-
-
-POST http://localhost:8080/facade
-Content-Type: application/json
-
-"msg6"
-
-###
-
-POST http://localhost:8080/facade
-Content-Type: application/json
-
-"msg7"
-
-###
-
-POST http://localhost:8080/facade
-Content-Type: application/json
-
-"msп8"
-
-###
-POST http://localhost:8080/facade
-Content-Type: application/json
-
-"msg9"
-
-###
-
-POST http://localhost:8080/facade
-Content-Type: application/json
-
-"msп10"
-
-###

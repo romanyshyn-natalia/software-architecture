@@ -1,28 +1,45 @@
+import argparse
 import random
 import uuid
 
+import consul
 import hazelcast
 import requests
 from flask import Flask, request
 
+# Parse port
+parser = argparse.ArgumentParser(description='Parsing port.')
+parser.add_argument('--port', type=int)
+args = parser.parse_args()
+port = args.port
+
+# Consul
+session = consul.Consul(host='localhost', port=8500)
+session.agent.service.register('facade-service',
+                               port=port,
+                               service_id=f"facade-{str(uuid.uuid4())}")
+# Flask app
 app = Flask(__name__)
 
-logging_web_clients = ["http://localhost:8082/log",
-                       "http://localhost:8083/log",
-                       "http://localhost:8084/log"]
+# Find ports of other services
+agent = session.agent
+services = agent.services()
 
-messages_web_clients = ["http://localhost:8085/message",
-                        "http://localhost:8086/message"]
+logging_web_clients = []
+messages_web_clients = []
+for key, value in services.items():
+    service_name = key.split("-")[0]
+    if service_name == "logging":
+        logging_web_clients.append(f"http://localhost:{value['Port']}/log")
+    elif service_name == "messages":
+        messages_web_clients.append(f"http://localhost:{value['Port']}/message")
 
 # Start the Hazelcast Client and connect to an already running Hazelcast Cluster on 127.0.0.1
 client = hazelcast.HazelcastClient(cluster_name="dev",
-                                   cluster_members=[
-                                       "127.0.0.1:5701",
-                                       "127.0.0.1:5702",
-                                       "127.0.0.1:5703"
-                                   ])
+                                   cluster_members=session.kv.get('hazelcast_ports')[1]['Value'].decode("utf-8").split()
+                                   )
 
-messages_queue = client.get_queue("messages-queue").blocking()
+messages_queue = client.get_queue(session.kv.get('queue')[1]['Value'].decode("utf-8")).blocking()
 
 
 @app.route("/facade", methods=['POST', 'GET'])
@@ -43,4 +60,4 @@ def facade():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='localhost', port=port)
